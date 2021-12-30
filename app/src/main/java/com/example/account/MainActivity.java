@@ -135,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
                 itemDatas.add(returnposition,
                         new ItemData(returnname, returnvalue, returndate, icon,returninout));
                 recyclerViewAdapter.notifyItemInserted(returnposition);
+                dataBank.saveData();
 //            }
 
         }
@@ -144,8 +145,8 @@ public class MainActivity extends AppCompatActivity {
 
     //Init Data;
     public void initData(){
-        itemDatas=new ArrayList<>();
-
+        dataBank=new DataBank(MainActivity.this);
+        itemDatas=dataBank.loadData();
     }
 
     private static class myRecyclerViewAdapter extends RecyclerView.Adapter {
