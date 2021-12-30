@@ -2,6 +2,7 @@ package com.example.account;
 
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -47,11 +48,18 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.InnerH
         return 0;
     }
 
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
     public class InnerHolder extends RecyclerView.ViewHolder{
 
         private ImageFilterView micon;
         private AppCompatTextView mtitle;
         private AppCompatTextView mmoney;
+        private AppCompatTextView mtime;
 
         public InnerHolder(View itemView) {
             super(itemView);
@@ -59,7 +67,8 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.InnerH
             //找数据条目；
             micon= (ImageFilterView) itemView.findViewById(R.id.imageFilterView);
             mtitle = (AppCompatTextView) itemView.findViewById(R.id.item_title);
-//            mmoney = (AppCompatTextView) itemView.findViewById(R.id.item_money);
+            mmoney = (AppCompatTextView) itemView.findViewById(R.id.item_money);
+            mtime = (AppCompatTextView) itemView.findViewById(R.id.item_date);
         }
 
 
@@ -68,9 +77,13 @@ public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.InnerH
             //设置数据；
             micon.setImageResource(itemData.icon);
             mtitle.setText(itemData.title);
+            mtime.setText(itemData.date);
+            mmoney.setText(itemData.money);
 
         }
+
     }
+
 
 
 }

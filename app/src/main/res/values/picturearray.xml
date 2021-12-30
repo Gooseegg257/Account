@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="picture">
+        <item>旅行</item>
+        <item>餐饮</item>
+        <item>宠物</item>
+        <item>衣服</item>
+        <item>红包</item>
+        <item>家具</item>
+        <item>教育</item>
+        <item>美容</item>
+        <item>母婴</item>
+        <item>数码</item>
+        <item>投资</item>
+        <item>医疗</item>
+        <item>运动</item>
+        <item>住房</item>
+        <item>休闲</item>
+        <item>日用</item>
+    </string-array>
+</resources>

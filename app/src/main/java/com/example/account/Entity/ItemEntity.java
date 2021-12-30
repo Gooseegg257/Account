@@ -6,7 +6,6 @@ import com.example.account.R;
 public class ItemEntity {
     public static int icons[]={
             R.mipmap.airplane,
-            R.mipmap.baihuo,
             R.mipmap.canyin,
             R.mipmap.chongwu,
             R.mipmap.clothes,
@@ -15,8 +14,6 @@ public class ItemEntity {
             R.mipmap.jiaoyu,
             R.mipmap.meironghufu,
             R.mipmap.muying,
-            R.mipmap.qunfengcanyinmeishi,
-            R.mipmap.shouru,
             R.mipmap.shuma,
             R.mipmap.touzi,
             R.mipmap.yiliao,

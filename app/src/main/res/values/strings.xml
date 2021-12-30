@@ -2,4 +2,10 @@
     <string name="app_name">Account</string>
     <string name="item_title">Title</string>
     <string name="item_money">money</string>
+    <string name="item_date">date</string>
+    <string name="xxxx_xx_xx">"xxxx_xx_xx"</string>
+    <string name="item_delete">删除</string>
+    <string name="item_change">修改</string>
+    <string name="item_update">修改</string>
+    <string name="item_add">添加</string>
 </resources>
