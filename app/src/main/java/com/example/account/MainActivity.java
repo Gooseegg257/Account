@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemLongClick(View view, int pos) {
                 PopupMenu popupMenu = new PopupMenu(getApplicationContext(),view);
-                popupMenu.getMenuInflater().inflate(R.menu.menu,popupMenu.getMenu());
+                popupMenu.getMenuInflater().inflate(R.menu.longclick_menu,popupMenu.getMenu());
 
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
