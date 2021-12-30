@@ -15,6 +15,8 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.account.Entity.ItemEntity;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -49,14 +51,14 @@ public class AddActivity extends AppCompatActivity implements DatePicker.OnDateC
         initSpinner();
         Calendar calendar= Calendar.getInstance();
         year=calendar.get(Calendar.YEAR);
-        month=calendar.get(Calendar.MONTH)+1;
+        month=calendar.get(Calendar.MONTH);
         day=calendar.get(Calendar.DAY_OF_MONTH);
         time.init(year, month, day, new DatePicker.OnDateChangedListener() {
             @Override
             public void onDateChanged(DatePicker datePicker, int i, int i1, int i2) {
 //                获取选中的年月日
                 year=i;
-                month=i1;
+                month=i1+1;
                 day=i2;
             }
         });
@@ -68,6 +70,10 @@ public class AddActivity extends AppCompatActivity implements DatePicker.OnDateC
             @Override
             public void onClick(View view) {
                 String name=name2.getText().toString();
+                if(name.length()>12){
+                    Toast.makeText(AddActivity.this,"名称字符不多于6个！",Toast.LENGTH_LONG).show();
+                    finish();
+                }
                 String value=value2.getText().toString();
                 String date=(year+"-"+month+"-"+day);
                 float money=Float.parseFloat(value);
@@ -103,6 +109,20 @@ public class AddActivity extends AppCompatActivity implements DatePicker.OnDateC
         name2=(EditText) findViewById(R.id.button_add_name);
         value2=(EditText) findViewById(R.id.button_add_value);
         time=(DatePicker) findViewById(R.id.button_add_date);
+
+        Intent intent=getIntent();
+        String returnname = intent.getStringExtra("name");
+        String returndate = intent.getStringExtra("date");
+        int returnpicture = intent.getIntExtra("picture", -1);
+        float returnmoney=intent.getFloatExtra("money",-1);
+        int returninout=intent.getIntExtra("inout",-1);
+        if(returndate !=null  || returnname != null ){
+            String value=Float.toString(returnmoney);
+            name2.setText(returnname);
+            value2.setText(value);
+//            picture.setSelection(returnpicture,true);
+//            inout.setSelection(returninout,true);
+        }
     }
 
 

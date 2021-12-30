@@ -1,5 +1,11 @@
 package com.example.account;
 
+
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,9 +16,11 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.preference.PreferenceManager;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -40,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int REQUEST_CODE_ADD=123;
     public static final int REQUEST_CODE_EDIT=REQUEST_CODE_ADD+1;
-    public static final int RESULT_CODE_ADD_DATA =1;
+    public static final int RESULT_CODE_ADD_DATA =324;
 
     ItemData charge;
     private String NAME,TIME;
@@ -79,9 +87,8 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent= new Intent();
-                intent.setClass(com.example.account.MainActivity.this,com.example.account.AddActivity.class);
-                startActivityForResult(intent,1);
+                Intent intent= new Intent(MainActivity.this,AddActivity.class);
+                launcherAdd.launch(intent);
             }
         });
 
@@ -104,7 +111,17 @@ public class MainActivity extends AppCompatActivity {
                                 Toast.makeText(MainActivity.this,"添加",Toast.LENGTH_LONG).show();
                                 break;
                             case R.id.item_change:
-                                Toast.makeText(MainActivity.this,"修改了",Toast.LENGTH_LONG).show();
+                                Intent intent=new Intent(MainActivity.this,AddActivity.class);
+                                intent.putExtra("position",pos);
+                                String title=itemDatas.get(pos).getTitle();
+                                intent.putExtra("name",title);
+                                String Money=itemDatas.get(pos).getMoney();
+                                float money=Float.parseFloat(Money);
+                                intent.putExtra("money",money);
+                                intent.putExtra("date",itemDatas.get(pos).getDate());
+                                intent.putExtra("inout",itemDatas.get(pos).getInout());
+                                intent.putExtra("picture",itemDatas.get(pos).getIcon());
+                                launcherEdit.launch(intent);
                                 break;
                         }
 
@@ -117,11 +134,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-//        if(requestCode==REQUEST_CODE_ADD){
-            if(resultCode == RESULT_CODE_ADD_DATA) {
+    ActivityResultLauncher<Intent> launcherAdd= registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+            Intent data=result.getData();
+            int resultCode=result.getResultCode();
+            if(resultCode == RESULT_CODE_ADD_DATA)
+            {
+                if(null==data)return;
                 String returnname = data.getStringExtra("name");
 //                String returnvalue = data.getStringExtra("value");
                 String returndate = data.getStringExtra("date");
@@ -136,11 +156,50 @@ public class MainActivity extends AppCompatActivity {
                         new ItemData(returnname, returnvalue, returndate, icon,returninout));
                 recyclerViewAdapter.notifyItemInserted(returnposition);
                 dataBank.saveData();
-//            }
-
+            }
         }
+    });
 
-    }
+    ActivityResultLauncher<Intent> launcherEdit= registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+            Intent data=result.getData();
+            int resultCode=result.getResultCode();
+            if(resultCode == RESULT_CODE_ADD_DATA)
+            {
+                if(null==data)return;
+                String returnname = data.getStringExtra("name");
+                String returndate = data.getStringExtra("date");
+                int returnpicture = data.getIntExtra("picture", -1);
+                float returnmoney=data.getFloatExtra("money",-1);
+                int returnposition = data.getIntExtra("position", itemDatas.size());
+                int returninout =data.getIntExtra("inout",-1);
+                int icon=ItemEntity.icons[returnpicture-1];
+
+                String returnvalue=Float.toString(returnmoney);
+                itemDatas.get(returnposition).setTitle(returnname);
+                itemDatas.get(returnposition).setMoney(returnvalue);
+                itemDatas.get(returnposition).setDate(returndate);
+                itemDatas.get(returnposition).setIcon(icon);
+                itemDatas.get(returnposition).setInout(returninout);
+                recyclerViewAdapter.notifyItemChanged(returnposition);
+                dataBank.saveData();
+            }
+        }
+    });
+
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+////        if(requestCode==REQUEST_CODE_ADD){
+//            if(resultCode == RESULT_CODE_ADD_DATA) {
+//
+////            }
+//
+//        }
+//
+//    }
     private DataBank dataBank;
 
     //Init Data;
@@ -160,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_list_view, parent, false);
+                    .inflate(R.layout.card_item, parent, false);
 
             return new MyViewHolder(view);
         }

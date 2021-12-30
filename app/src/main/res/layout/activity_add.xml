@@ -56,6 +56,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="请输入账单名称"
+
         android:imeOptions="actionNext"
         android:layerType="software"
         android:textColorHint="@color/black"
