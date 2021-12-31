@@ -2,10 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
         <item
-            android:id="@+id/item_add"
-            android:title="添加"/>
-
-        <item
             android:id="@+id/item_change"
             android:title="修改"/>
 
