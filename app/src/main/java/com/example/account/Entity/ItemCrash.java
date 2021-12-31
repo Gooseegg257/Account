@@ -1,6 +1,8 @@
 package com.example.account.Entity;
 
-public class ItemCrash {
+import java.io.Serializable;
+
+public class ItemCrash implements Serializable {
     public float crash_in;
     public float crash_out;
     public float crash_all;
