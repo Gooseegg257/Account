@@ -14,7 +14,7 @@ import java.util.List;
 public class DataBank_Crash {
     public static final String DATA_FILE_NAME = "data2";
     private final Context context;
-    ItemCrash itemDataList;
+    ItemCrash itemData;
 
     public DataBank_Crash(Context context) {
         this.context=context;
@@ -22,22 +22,22 @@ public class DataBank_Crash {
 
     @SuppressWarnings("unchecked")
     public ItemCrash loadData() {
-        itemDataList =new ItemCrash();
+        itemData =new ItemCrash();
         try {
             ObjectInputStream objectInputStream = new ObjectInputStream(context.openFileInput(DATA_FILE_NAME));
-            itemDataList = (ItemCrash) objectInputStream.readObject();
+            itemData = (ItemCrash) objectInputStream.readObject();
         }catch(Exception e)
         {
             e.printStackTrace();
         }
-        return itemDataList;
+        return itemData;
     }
 
     public void saveData() {
         ObjectOutputStream objectOutputStream=null;
         try{
             objectOutputStream = new ObjectOutputStream(context.openFileOutput(DATA_FILE_NAME, Context.MODE_PRIVATE));
-            objectOutputStream.writeObject(itemDataList);
+            objectOutputStream.writeObject(itemData);
         }catch(IOException e){
             e.printStackTrace();
         }finally {
