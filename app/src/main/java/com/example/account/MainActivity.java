@@ -1,3 +1,12 @@
+/*
+* Account记账本App
+* 移动软件开发课程设计
+* 编写者：Robin-Goose
+*版本号Version：1.0.0
+* 日期Date：2021-21-31
+*
+*/
+
 package com.example.account;
 
 
@@ -42,28 +51,37 @@ import com.example.account.Entity.ItemEntity;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/*
+    Account记账本App
+    功能：记账；每条账单存储账单类型、账单备注、账单金额以及账单日期；
+ */
 public class MainActivity extends AppCompatActivity {
 
-    private ImageButton button;
 
     public static final int REQUEST_CODE_ADD=123;
     public static final int REQUEST_CODE_EDIT=REQUEST_CODE_ADD+1;
     public static final int RESULT_CODE_ADD_DATA =324;
 
+//   声明自定义类的数据；
     ItemData charge;
     private String NAME,TIME;
     private int VALUE;
     private String Inout;
 
+    /*
+    * 布局控件声明
+    * */
     private TextView all_text;
     private TextView crash_in;
     private TextView crash_out;
     private TextView crash_all;
-    private float item_in;
-    private float item_out;
-    private float item_all;
+    private ImageButton button;
 
+    private double item_in;
+    private double item_out;
+    private double item_all;
+
+//  声明两个类，一个存放RecyclreView的Item，一个存放顶部数据
     private List<ItemData> itemDatas;
     public ItemCrash itemCrash;
 
@@ -82,10 +100,12 @@ public class MainActivity extends AppCompatActivity {
         initData();
         initItem();
 
+//      初始化RecyclerView、自定义的LayoutManager
         RecyclerView mainRecyclerView=findViewById(R.id.recyclerview);
         LinearLayoutManager layoutManager=new LinearLayoutManager(this);
         mainRecyclerView.setLayoutManager(layoutManager);
 
+//      初始化自定义的Adapter
         mainRecyclerView.setAdapter(new myRecyclerViewAdapter(itemDatas));
         recyclerViewAdapter=new myRecyclerViewAdapter(itemDatas);
         mainRecyclerView.setAdapter(recyclerViewAdapter);
@@ -97,9 +117,9 @@ public class MainActivity extends AppCompatActivity {
         crash_in=(TextView)findViewById(R.id.item_count_in_text);
         crash_out=(TextView)findViewById(R.id.item_count_out_text);
 
-        String item_in=Float.toString(itemCrash.crash_in);
-        String item_out=Float.toString(itemCrash.crash_out);
-        String item_all=Float.toString(itemCrash.crash_all);
+        String item_in=Double.toString(itemCrash.crash_in);
+        String item_out=Double.toString(itemCrash.crash_out);
+        String item_all=Double.toString(itemCrash.crash_all);
 
         crash_all.setText(item_all);
         crash_in.setText(item_in);
@@ -111,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
         mainRecyclerView.addItemDecoration(new DividerItemDecoration(this,
                 DividerItemDecoration.VERTICAL));
 
+//        添加按钮初始化以及单击事件监听；
         button=(ImageButton) findViewById(R.id.button_add);
         button.setOnClickListener(new OnClickListener() {
             @Override
@@ -120,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+//        自定义RecyclerView长按事件；
         recyclerViewAdapter.setOnItemClickListener(new myRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemLongClick(View view, int pos) {
@@ -135,32 +157,32 @@ public class MainActivity extends AppCompatActivity {
                                 String oldvalue=itemDatas.get(pos).getMoney();
                                 String oldinout=itemDatas.get(pos).getInout();
 
-                                float oldmoney=Float.parseFloat(oldvalue);
+                                double oldmoney=Double.parseDouble(oldvalue);
                                 if(oldinout.equals("+")){
-                                    float item_in=itemCrash.getCrash_in();
-                                    float item_in2=item_in-oldmoney;
-                                    float itemall=itemCrash.getCrash_all();
+                                    double item_in=itemCrash.getCrash_in();
+                                    double item_in2=item_in-oldmoney;
+                                    double itemall=itemCrash.getCrash_all();
                                     itemall=itemall-oldmoney;
                                     itemCrash.setCrash_all(itemall);
                                     itemCrash.setCrash_in(item_in2);
 
-                                    String all=Float.toString(itemall);
-                                    String in=Float.toString(item_in2);
+                                    String all=Double.toString(itemall);
+                                    String in=Double.toString(item_in2);
 
                                     crash_all.setText(all);
                                     crash_in.setText(in);
                                     dataBank_crash.saveData();
 
                                 }else if(oldinout.equals("-")){
-                                    float item_out=itemCrash.getCrash_out();
-                                    float item_out2=item_out-oldmoney;
-                                    float itemall=itemCrash.getCrash_all();
+                                    double item_out=itemCrash.getCrash_out();
+                                    double item_out2=item_out-oldmoney;
+                                    double itemall=itemCrash.getCrash_all();
                                     itemall=itemall+oldmoney;
                                     itemCrash.setCrash_all(itemall);
                                     itemCrash.setCrash_out(item_out2);
 
-                                    String all=Float.toString(itemall);
-                                    String out=Float.toString(item_out2);
+                                    String all=Double.toString(itemall);
+                                    String out=Double.toString(item_out2);
 
                                     crash_all.setText(all);
                                     crash_out.setText(out);
@@ -177,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
                                 String title=itemDatas.get(pos).getTitle();
                                 intent.putExtra("name",title);
                                 String Money=itemDatas.get(pos).getMoney();
-                                float money=Float.parseFloat(Money);
+                                double money=Double.parseDouble(Money);
                                 intent.putExtra("money",money);
                                 intent.putExtra("date",itemDatas.get(pos).getDate());
                                 intent.putExtra("inout",itemDatas.get(pos).getInout());
@@ -195,6 +217,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+//    自定义一个用于Activity之间数据传输的函数，其功能为添加一个RecyclerView的Item
     ActivityResultLauncher<Intent> launcherAdd= registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @Override
         public void onActivityResult(ActivityResult result) {
@@ -207,22 +230,22 @@ public class MainActivity extends AppCompatActivity {
 //                String returnvalue = data.getStringExtra("value");
                 String returndate = data.getStringExtra("date");
                 int returnpicture = data.getIntExtra("picture", -1);
-                float returnmoney=data.getFloatExtra("money",-1);
+                double returnmoney=data.getFloatExtra("money",-1);
                 int returnposition = data.getIntExtra("position", itemDatas.size());
                 int returninout =data.getIntExtra("inout",-1);
                 int icon=ItemEntity.icons[returnpicture-1];
 
                 //添加到收入或支出总计算值中；
                 if(returninout==1){
-                    float item_in=itemCrash.getCrash_in();
-                    float item_in2=item_in+returnmoney;
-                    float itemall=itemCrash.getCrash_all();
+                    double item_in=itemCrash.getCrash_in();
+                    double item_in2=item_in+returnmoney;
+                    double itemall=itemCrash.getCrash_all();
                     itemall=itemall+returnmoney;
                     itemCrash.setCrash_in(item_in2);
                     itemCrash.setCrash_all(itemall);
 
-                    String all=Float.toString(itemall);
-                    String in=Float.toString(item_in2);
+                    String all=Double.toString(itemall);
+                    String in=Double.toString(item_in2);
 
                     crash_all.setText(all);
                     crash_in.setText(in);
@@ -230,22 +253,22 @@ public class MainActivity extends AppCompatActivity {
                     dataBank_crash.saveData();
 
                 }else if(returninout==0){
-                    float item_out=itemCrash.getCrash_out();
-                    float item_out2=item_out+returnmoney;
-                    float itemall=itemCrash.getCrash_all();
+                    double item_out=itemCrash.getCrash_out();
+                    double item_out2=item_out+returnmoney;
+                    double itemall=itemCrash.getCrash_all();
                     itemall=itemall-returnmoney;
                     itemCrash.setCrash_all(itemall);
                     itemCrash.setCrash_out(item_out2);
 
-                    String all=Float.toString(itemall);
-                    String out=Float.toString(item_out2);
+                    String all=Double.toString(itemall);
+                    String out=Double.toString(item_out2);
 
                     crash_all.setText(all);
                     crash_out.setText(out);
 
                     dataBank_crash.saveData();
                 }
-                String returnvalue=Float.toString(returnmoney);
+                String returnvalue=Double.toString(returnmoney);
                 itemDatas.add(returnposition,
                         new ItemData(returnname, returnvalue, returndate, icon,returninout));
                 recyclerViewAdapter.notifyItemInserted(returnposition);
@@ -254,6 +277,7 @@ public class MainActivity extends AppCompatActivity {
         }
     });
 
+//    自定义一个用于Activity之间数据传输的函数，其功能为修改一个RecyclerView的Item
     ActivityResultLauncher<Intent> launcherEdit= registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @Override
         public void onActivityResult(ActivityResult result) {
@@ -268,32 +292,32 @@ public class MainActivity extends AppCompatActivity {
                 String oldvalue=itemDatas.get(returnposition).getMoney();
                 String oldinout=itemDatas.get(returnposition).getInout();
 
-                float oldmoney=Float.parseFloat(oldvalue);
+                double oldmoney=Double.parseDouble(oldvalue);
                 if(oldinout.equals("+")){
-                    float item_in=itemCrash.getCrash_in();
-                    float item_in2=item_in-oldmoney;
-                    float itemall=itemCrash.getCrash_all();
+                    double item_in=itemCrash.getCrash_in();
+                    double item_in2=item_in-oldmoney;
+                    double itemall=itemCrash.getCrash_all();
                     itemall=itemall-oldmoney;
                     itemCrash.setCrash_all(itemall);
                     itemCrash.setCrash_in(item_in2);
 
-                    String all=Float.toString(itemall);
-                    String in=Float.toString(item_in2);
+                    String all=Double.toString(itemall);
+                    String in=Double.toString(item_in2);
 
                     crash_all.setText(all);
                     crash_in.setText(in);
                     dataBank_crash.saveData();
 
                 }else if(oldinout.equals("-")){
-                    float item_out=itemCrash.getCrash_out();
-                    float item_out2=item_out-oldmoney;
-                    float itemall=itemCrash.getCrash_all();
+                    double item_out=itemCrash.getCrash_out();
+                    double item_out2=item_out-oldmoney;
+                    double itemall=itemCrash.getCrash_all();
                     itemall=itemall+oldmoney;
                     itemCrash.setCrash_all(item_all);
                     itemCrash.setCrash_out(item_out2);
 
-                    String all=Float.toString(itemall);
-                    String out=Float.toString(item_out2);
+                    String all=Double.toString(itemall);
+                    String out=Double.toString(item_out2);
 
                     crash_all.setText(all);
                     crash_out.setText(out);
@@ -302,7 +326,7 @@ public class MainActivity extends AppCompatActivity {
                 String returnname = data.getStringExtra("name");
                 String returndate = data.getStringExtra("date");
                 int returnpicture = data.getIntExtra("picture", -1);
-                float returnmoney=data.getFloatExtra("money",-1);
+                double returnmoney=data.getFloatExtra("money",-1);
 
                 int returninout =data.getIntExtra("inout",-1);
                 int icon=ItemEntity.icons[returnpicture-1];
@@ -310,36 +334,36 @@ public class MainActivity extends AppCompatActivity {
 
                 //添加到收入或支出总计算值中；
                 if(returninout==1){
-                    float item_in=itemCrash.getCrash_in();
-                    float item_in2=item_in+returnmoney;
-                    float itemall=itemCrash.getCrash_all();
+                    double item_in=itemCrash.getCrash_in();
+                    double item_in2=item_in+returnmoney;
+                    double itemall=itemCrash.getCrash_all();
                     itemall=itemall+returnmoney;
                     itemCrash.setCrash_all(item_all);
                     itemCrash.setCrash_in(item_in2);
 
-                    String all=Float.toString(itemall);
-                    String in=Float.toString(item_in2);
+                    String all=Double.toString(itemall);
+                    String in=Double.toString(item_in2);
 
                     crash_all.setText(all);
                     crash_in.setText(in);
                     dataBank_crash.saveData();
 
                 }else if(returninout==0){
-                    float item_out=itemCrash.getCrash_out();
-                    float item_out2=item_out+returnmoney;
-                    float itemall=itemCrash.getCrash_all();
+                    double item_out=itemCrash.getCrash_out();
+                    double item_out2=item_out+returnmoney;
+                    double itemall=itemCrash.getCrash_all();
                     itemall=itemall-returnmoney;
                     itemCrash.setCrash_all(itemall);
                     itemCrash.setCrash_out(item_out2);
 
-                    String all=Float.toString(itemall);
-                    String out=Float.toString(item_out2);
+                    String all=Double.toString(itemall);
+                    String out=Double.toString(item_out2);
 
                     crash_all.setText(all);
                     crash_out.setText(out);
                     dataBank_crash.saveData();
                 }
-                String returnvalue=Float.toString(returnmoney);
+                String returnvalue=Double.toString(returnmoney);
                 itemDatas.get(returnposition).setTitle(returnname);
                 itemDatas.get(returnposition).setMoney(returnvalue);
                 itemDatas.get(returnposition).setDate(returndate);
@@ -363,6 +387,7 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //
 //    }
+
     private DataBank dataBank;
 
     //Init Data;
@@ -371,6 +396,7 @@ public class MainActivity extends AppCompatActivity {
         itemDatas=dataBank.loadData();
     }
 
+//    初始化顶部数据及布局控件
     public void initItem(){
         dataBank_crash=new DataBank_Crash(MainActivity.this);
         itemCrash=dataBank_crash.loadData();
@@ -382,6 +408,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+//    自定义RecyclerView的Adapter
     private static class myRecyclerViewAdapter extends RecyclerView.Adapter {
         private List<ItemData> itemDatas;
 
@@ -398,6 +425,7 @@ public class MainActivity extends AppCompatActivity {
             return new MyViewHolder(view);
         }
 
+//        重写onBindViewHolder，其中需要确定数据的填充以及长按事件的监听；
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             MyViewHolder holder1 = (MyViewHolder) holder;
@@ -427,6 +455,7 @@ public class MainActivity extends AppCompatActivity {
             return itemDatas.size();
         }
 
+//        自定义ViewHolder，同样需要绑定控件及其数据
         private class MyViewHolder extends RecyclerView.ViewHolder  {
 
             public static final int CONTEXT_MENU_ID_ADD = 1;
@@ -471,6 +500,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+//        自定义一个RecyclerView的接口用于实现长按点击事件；
         private OnItemClickListener onItemClickListener;
         public interface OnItemClickListener{
             void onItemLongClick(View view , int pos);

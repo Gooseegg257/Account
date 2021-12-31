@@ -49,6 +49,8 @@ public class AddActivity extends AppCompatActivity implements DatePicker.OnDateC
         setContentView(R.layout.activity_add);
         init();
         initSpinner();
+
+//        获取DatePicker中选取的数值；
         Calendar calendar= Calendar.getInstance();
         year=calendar.get(Calendar.YEAR);
         month=calendar.get(Calendar.MONTH);
@@ -101,6 +103,7 @@ public class AddActivity extends AppCompatActivity implements DatePicker.OnDateC
         });
     }
 
+//    初始化控件数值，同时监听当前事件是Add事件还是Edit事件；
     private void init(){
         create=(Button) findViewById(R.id.yes);
         cancel=(Button) findViewById(R.id.no);
@@ -148,6 +151,7 @@ public class AddActivity extends AppCompatActivity implements DatePicker.OnDateC
             }
         });
 
+//        再次自定义一个Spinner用于获取账单的收支类型；
         inout=(Spinner) findViewById(R.id.button_add_inout);
         inout_data=new ArrayList<>();
         final SimpleAdapter inout_adapter=new SimpleAdapter(this,getInout_data(),R.layout.inout,new String[]{"inout"},new int[]{R.id.inout});
@@ -182,6 +186,7 @@ public class AddActivity extends AppCompatActivity implements DatePicker.OnDateC
 
     }
 
+//    收支类型Spinner的Map数据填充；
     private List<Map<String,Object>> getInout_data(){
         Map<String,Object> map1=new HashMap<>();
         map1.put("inout","收入");
@@ -192,7 +197,7 @@ public class AddActivity extends AppCompatActivity implements DatePicker.OnDateC
         return inout_data;
     }
 
-//    Spinner数据
+//    账单类型Spinner的Map数据填充；
     private List<Map<String,Object>> getData(){
         Map<String,Object> map1=new HashMap<>();
         map1.put("no","1");
